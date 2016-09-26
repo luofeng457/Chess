@@ -3,6 +3,7 @@ var c = document.getElementById("my");
 var canv = c.getContext("2d");
 var me = true;
 var arr = [];
+var win = [];
 for(var i=0;i<18;i++)
 {
    arr[i] = [];
