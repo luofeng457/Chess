@@ -77,7 +77,10 @@ logo.onload = function() {
    drawBoard();
    c.onclick = function(e) {
       if (flag) {
-         return 0;
+         return;
+      }
+      if(!me){
+         return;
       }
       var x = e.offsetX;
       var y = e.offsetY;
@@ -85,34 +88,23 @@ logo.onload = function() {
       var j = Math.floor(y / 30);
       if (arr[i][j] == 0) {
          drawChessman(i, j, me);
-         if (me) {
-            arr[i][j] = 1;
-            for (var k = 0; k < count; k++) {
-               if (wins[i][j][k]) {
-                  player[k]++;
-                  computer[k] = 0;
-                  console.log(player[k]);
-                  if (player[k] == 5) {
-                     window.alert("你赢了！");
-                     flag = true;
-                  }
-               }
-            }
-         } else {
-            arr[i][j] = 2;
-            for (var k = 0; k < count; k++) {
-               if (wins[i][j][k]) {
-                  computer[k]++;
-                  player[k] = 0;
-                  console.log(player[k]);
-                  if (computer[k] == 5) {
-                     window.alert("电脑赢了！");
-                     flag = true;
-                  }
+         arr[i][j] = 1;
+         for (var k = 0; k < count; k++) {
+            if (wins[i][j][k]) {
+               player[k]++;
+               computer[k] = 0;
+               console.log(player[k]);
+               if (player[k] == 5) {
+                  window.alert("你赢了！");
+                  flag = true;
+                  console.log(flag);
                }
             }
          }
-         me = !me;
+         if (!flag) {
+            me = !me;
+            computerAI();
+         }
       }
    }
 }
@@ -137,7 +129,88 @@ var drawChessman = function(i, j, me) {
    if (me) {
       canv.fillStyle = "black";
    } else {
-      canv.fillStyle = "#d3eab5";
+      canv.fillStyle = "#d3fad5";
    }
    canv.fill();
+}
+
+//AI算法实现
+var computerAI = function() {
+   var playerScore = [];
+   var computerScore = [];
+   var max = 0;
+   var u = 0,
+      v = 0;
+   for (var i = 0; i < 18; i++) {
+      playerScore[i] = [];
+      computerScore[i] = [];
+      for (var j = 0; j < 18; j++) {
+         playerScore[i][j] = 0;
+         computerScore[i][j] = 0;
+      }
+   }
+   for (var i = 0; i < 18; i++) {
+      for (var j = 0; j < 18; j++) {
+         if (arr[i][j] == 0) {
+            for (var k = 0; k < count; k++) {
+               if (wins[i][j][k]) {
+                  if (player[k] == 1) {
+                     playerScore[i][j] += 200;
+                  } else if (player[k] == 2) {
+                     playerScore[i][j] == 500;
+                  } else if (player[k] == 3) {
+                     playerScore[i][j] += 2000;
+                  } else if (player[k] == 4) {
+                     playerScore[i][j] += 10000;
+                  }
+                  if (computer[k] == 1) {
+                     computerScore[i][j] += 230;
+                  } else if (computer[k] == 2) {
+                     computerScore[i][j] == 530;
+                  } else if (computer[k] == 3) {
+                     computerScore[i][j] += 2200;
+                  } else if (computer[k] == 4) {
+                     computerScore[i][j] += 20000;
+                  }
+               }
+            }
+            if (playerScore[i][j] > max) {
+               u = i;
+               v = j;
+               max = playerScore[i][j];
+            } else if (playerScore[i][j] == max) {
+               if (computerScore[i][j] > computerScore[u][v]) {
+                  u = i;
+                  v = j;
+               }
+            }
+            if (computerScore[i][j] > max) {
+               u = i;
+               v = j;
+               max = computerScore[i][j];
+            } else if (computerScore[i][j] == max) {
+               if (playerScore[i][j] > playerScore[u][v]) {
+                  u = i;
+                  v = j;
+               }
+            }
+         }
+      }
+   }
+   drawChessman(u, v, false);
+   arr[u][v] = 2;
+   for (var k = 0; k < count; k++) {
+      if (wins[u][v][k]) {
+         computer[k]++;
+         player[k] = 0;
+         if (computer[k] == 5) {
+            window.alert("电脑赢了！");
+            flag = true;
+            console.log(flag);
+         }
+      }
+   }
+   if (!flag) {
+      me = !me;
+   }
 }
