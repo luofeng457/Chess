@@ -95,7 +95,7 @@ logo.onload = function() {
                computer[k] = 0;
                console.log(player[k]);
                if (player[k] == 5) {
-                  window.alert("你赢了！");
+                  window.alert("你赢了！真厉害~");
                   flag = true;
                   console.log(flag);
                }
@@ -204,7 +204,7 @@ var computerAI = function() {
          computer[k]++;
          player[k] = 0;
          if (computer[k] == 5) {
-            window.alert("电脑赢了！");
+            window.alert("电脑赢了！你笨死啦~");
             flag = true;
             console.log(flag);
          }
