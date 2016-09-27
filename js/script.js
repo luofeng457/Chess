@@ -1,17 +1,64 @@
-
 var c = document.getElementById("my");
 var canv = c.getContext("2d");
 var me = true;
 var arr = [];
-var win = [];
+
+//赢法数组
+var wins = [];
+
 for(var i=0;i<18;i++)
 {
    arr[i] = [];
    for(var j=0;j<18;j++)
    {
-   arr[i][j]  = 0;
+   arr[i][j]  = 0;   
    }
 }
+//赢法数组初始化
+for(var i=0;i<18;i++){
+   wins[i] = [];
+   for(var j=0;j<18;j++)
+      wins[i][j] = [];
+}
+//竖线赢法
+var count = 0;
+for(var i=0;i<18;i++){
+   for(var j=0;j<14;j++){
+      for(var k=0;k<5;k++){
+         wins[i][j+k][count] = true;
+      }
+      count++;
+   }
+}
+//横线赢法
+for(var i=0;i<18;i++){
+   for(var j=0;j<14;j++){
+      for(var k=0;k<5;k++){
+         wins[j+k][i][count] = true;
+      }
+      count++;
+   }
+}
+//斜线赢法
+for(var i=0;i<14;i++){
+   for(var j=0;j<14;j++){
+      for(var k=0;k<5;k++){
+         wins[i+k][j+k][count] = true;
+      }
+      count++;
+   }
+}
+//反斜线赢法
+for(var i=4;i<18;i++){
+   for(var j=0;j<14;j++){
+      for(var k=0;k<5;k++){
+         wins[i-k][j+k][count] = true;
+      }
+      count++;
+   }
+}
+
+console.log(count);
 
 var logo = new Image();
 logo.src = "image/img.jpg";
